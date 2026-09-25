@@ -19,6 +19,16 @@ npm start
 
 Abre [http://localhost:3000](http://localhost:3000)
 
+## GitHub Pages
+
+Cada push a `main` publica el frontend con GitHub Actions en:
+
+**https://kyara2005.github.io/rayuela-school/**
+
+Las imágenes, CSS y JS usan la ruta del repositorio (`/rayuela-school/...`), así el logo se ve en Pages y también en local. GitHub Pages solo sirve la interfaz estática; el login, las tareas y los archivos siguen necesitando `npm start` (o un servidor Node).
+
+Si es la primera vez, en el repo: **Settings → Pages → Source → GitHub Actions**.
+
 | Rol | Correo | Contraseña |
 |---|---|---|
 | Admin | `admin@rayuela.edu` | `admin123` |

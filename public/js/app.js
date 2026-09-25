@@ -45,6 +45,11 @@ function esc(s) {
   return String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 }
 
+function media(path) {
+  if (!path) return '';
+  return typeof assetUrl === 'function' ? assetUrl(path) : path;
+}
+
 function icon(name) {
   const paths = {
     calendar: '<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>',
@@ -304,7 +309,7 @@ function renderChrome() {
 
   $('#topbar').innerHTML = `
     <button class="menu-toggle" type="button" id="menu-btn">${icon('menu')}</button>
-    <a class="topbar-brand" href="#/panel"><img src="/assets/logo.png" alt="" /> La Rayuela</a>
+    <a class="topbar-brand" href="#/panel"><img src="${media('assets/logo.png')}" alt="" /> La Rayuela</a>
     <span class="year-pill">${icon('calendar')} ${esc(state.year?.name || '')}</span>
     ${kidChip}
     <div class="top-actions">
@@ -376,7 +381,7 @@ function renderChrome() {
   const nav = isAdmin() ? adminNav : u.role === 'tutor' ? tutorNav : parentNav;
   const route = parseRoute().path;
   $('#sidebar').innerHTML = `
-    <div class="brand"><img src="/assets/logo.png" alt="La Rayuela School" /></div>
+    <div class="brand"><img src="${media('assets/logo.png')}" alt="La Rayuela School" /></div>
     ${nav.map((g) => `
       <div class="nav-group">
         <div class="nav-head"><span class="ico ico-${g.color}">${icon(g.ico)}</span>${g.head.toUpperCase()}<span class="chev">${icon('chev')}</span></div>
@@ -744,14 +749,14 @@ async function viewTask(main, id) {
   const isParent = state.user.role === 'parent';
   const isTutor = state.user.role === 'tutor';
   const maxFiles = a.max_files || 1;
-  const filesHtml = (list) => (list || []).map((f) => `<p><a href="${f.url}" target="_blank">${esc(f.name || 'archivo')}</a></p>`).join('');
+  const filesHtml = (list) => (list || []).map((f) => `<p><a href="${media(f.url)}" target="_blank">${esc(f.name || 'archivo')}</a></p>`).join('');
   main.innerHTML = `
     ${title(`<a class="btn btn-ghost" href="#/tareas">Volver</a>${isTutor || isAdmin() ? ` <a class="btn btn-ghost" href="#/tareas/${a.id}/editar">${icon('pencil')} Editar</a>` : ''}`, esc(a.title), `${esc(a.class?.name || '')} · ${esc(a.tutor?.full_name || '')}`)}
     <div class="grid-2">
       <div class="card">
         <p>${esc(a.description || 'Sin descripción.')}</p>
         <p class="meta">Fecha límite: <strong>${fmtDateTime(a.due_date)}</strong> · Hasta ${maxFiles} archivo(s) · Sobre ${a.max_score || 10}</p>
-        ${filesHtml(a.attachments) || (a.attachment_url ? `<p><a href="${a.attachment_url}" target="_blank">${esc(a.attachment_name || 'Material del profesor')}</a></p>` : '')}
+        ${filesHtml(a.attachments) || (a.attachment_url ? `<p><a href="${media(a.attachment_url)}" target="_blank">${esc(a.attachment_name || 'Material del profesor')}</a></p>` : '')}
         ${isParent ? `
           <hr style="border:0;border-top:1px solid var(--line);margin:18px 0" />
           <h3>Tu entrega</h3>
@@ -978,7 +983,7 @@ async function viewTutorPayments(main) {
               <strong>${esc(p.month_name)}</strong>
               <div>${statusPill(p.status)}</div>
               ${(p.receipts || []).filter((r) => r.status === 'pendiente').map((r) => `
-                <p class="meta">${esc(r.file_name || 'archivo')} ${r.file_url ? `<a href="${r.file_url}" target="_blank">ver</a>` : ''}</p>
+                <p class="meta">${esc(r.file_name || 'archivo')} ${r.file_url ? `<a href="${media(r.file_url)}" target="_blank">ver</a>` : ''}</p>
                 <button class="btn btn-green" data-ok="${r.id}">Aprobar</button>
                 <button class="btn btn-danger" data-no="${r.id}">Rechazar</button>
               `).join('')}
@@ -1239,7 +1244,7 @@ async function viewGallery(main) {
     <div class="gallery-grid">
       ${items.length ? items.map((g) => `
         <article class="gallery-card">
-          ${g.image_url ? `<img src="${g.image_url}" alt="${esc(g.caption || '')}" />` : `<div class="gallery-ph">${icon('image')}</div>`}
+          ${g.image_url ? `<img src="${media(g.image_url)}" alt="${esc(g.caption || '')}" />` : `<div class="gallery-ph">${icon('image')}</div>`}
           <div class="body">
             <h4>${esc(g.caption || 'Sin descripción')}</h4>
             <p class="meta">${esc(g.tutor?.full_name || 'Profesor')} · ${fmtDateTime(g.created_at)}</p>

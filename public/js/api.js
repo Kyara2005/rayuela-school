@@ -8,7 +8,8 @@ const api = {
       headers['Content-Type'] = 'application/json';
       options = { ...options, body: JSON.stringify(options.body) };
     }
-    const res = await fetch(path, { ...options, headers, credentials: 'include' });
+    const url = (typeof assetUrl === 'function' ? assetUrl(path) : path);
+    const res = await fetch(url, { ...options, headers, credentials: 'include' });
     const data = await res.json().catch(() => ({}));
     if (!res.ok) {
       const err = new Error(data.error || 'Error de red');
