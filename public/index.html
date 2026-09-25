@@ -4,7 +4,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>La Rayuela School</title>
-  <script src="js/paths.js"></script>
   <link rel="icon" href="assets/logo.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -16,7 +15,8 @@
     <form class="login-card" id="login-form">
       <img class="login-logo" src="assets/logo.png" alt="La Rayuela School" />
       <h1>Portal familiar</h1>
-      <p class="lead">Entra como tutor o padre de familia</p>
+      <p class="lead" id="login-lead">Entra como tutor o padre de familia</p>
+      <div id="demo-note" class="demo-note hidden">Modo demostración: no hace falta encender el servidor. Los datos se guardan en este navegador.</div>
       <div id="login-error" class="login-error hidden"></div>
       <div class="field">
         <label for="email">Correo</label>
@@ -40,6 +40,7 @@
         <button type="button" data-fill="tutor@rayuela.edu">usar</button><br />
         Admin: admin@rayuela.edu / admin123
         <button type="button" data-fill="admin@rayuela.edu">usar</button>
+        <p class="meta" style="margin-top:8px"><button type="button" id="reset-demo" class="btn btn-ghost">Restablecer datos de demo</button></p>
       </div>
     </form>
     <form class="login-card hidden" id="change-form">
@@ -79,6 +80,8 @@
   <div class="toast" id="toast"></div>
   <div id="modal-root"></div>
 
+  <script src="js/paths.js"></script>
+  <script src="js/mock.js"></script>
   <script src="js/api.js"></script>
   <script src="js/app.js"></script>
 </body>

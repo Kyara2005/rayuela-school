@@ -25,7 +25,9 @@ Cada push a `main` publica el frontend con GitHub Actions en:
 
 **https://kyara2005.github.io/rayuela-school/**
 
-Las imágenes, CSS y JS usan la ruta del repositorio (`/rayuela-school/...`), así el logo se ve en Pages y también en local. GitHub Pages solo sirve la interfaz estática; el login, las tareas y los archivos siguen necesitando `npm start` (o un servidor Node).
+Las imágenes, CSS y JS usan la ruta del repositorio (`/rayuela-school/...`), así el logo se ve en Pages y también en local.
+
+En GitHub Pages el prototipo corre **en modo demostración**: no hay que encender Node ni ninguna extensión. Login, correo, tareas, archivos, calificaciones y alta de usuarios se simulan en el navegador (se guardan en `localStorage`). Si abres el proyecto en local con `npm start`, usa el backend real.
 
 Si es la primera vez, en el repo: **Settings → Pages → Source → GitHub Actions**.
 

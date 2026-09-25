@@ -1,14 +1,61 @@
 const api = {
   token: localStorage.getItem('rayuela_token') || '',
+  backend: '',
+
+  isMock() {
+    return this.backend === 'mock';
+  },
+
+  markDemoUi() {
+    const note = document.getElementById('demo-note');
+    if (note && this.isMock()) note.classList.remove('hidden');
+    document.body.classList.toggle('demo-mode', this.isMock());
+  },
+
+  async ensureBackend() {
+    if (this.backend) return this.backend === 'live';
+    if (typeof RayuelaMock !== 'undefined' && RayuelaMock.isForced()) {
+      this.backend = 'mock';
+      this.markDemoUi();
+      return false;
+    }
+    try {
+      const ctrl = new AbortController();
+      const timer = setTimeout(() => ctrl.abort(), 900);
+      const url = typeof assetUrl === 'function' ? assetUrl('/api/me') : '/api/me';
+      const headers = {};
+      if (this.token) headers.Authorization = `Bearer ${this.token}`;
+      const res = await fetch(url, { headers, credentials: 'include', signal: ctrl.signal });
+      clearTimeout(timer);
+      const type = res.headers.get('content-type') || '';
+      if (type.includes('application/json') || res.status === 401) {
+        this.backend = 'live';
+        this.markDemoUi();
+        return true;
+      }
+    } catch {}
+    this.backend = 'mock';
+    this.markDemoUi();
+    return false;
+  },
 
   async request(path, options = {}) {
+    const live = await this.ensureBackend();
+    if (!live) {
+      try {
+        return await RayuelaMock.dispatch(path, options, this.token);
+      } catch (err) {
+        err.status = err.status || 400;
+        throw err;
+      }
+    }
     const headers = { ...(options.headers || {}) };
     if (this.token) headers.Authorization = `Bearer ${this.token}`;
     if (!(options.body instanceof FormData) && options.body && typeof options.body === 'object') {
       headers['Content-Type'] = 'application/json';
       options = { ...options, body: JSON.stringify(options.body) };
     }
-    const url = (typeof assetUrl === 'function' ? assetUrl(path) : path);
+    const url = typeof assetUrl === 'function' ? assetUrl(path) : path;
     const res = await fetch(url, { ...options, headers, credentials: 'include' });
     const data = await res.json().catch(() => ({}));
     if (!res.ok) {

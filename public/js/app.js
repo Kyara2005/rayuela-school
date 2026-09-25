@@ -176,6 +176,7 @@ function go(path) {
 async function boot() {
   bindEyes();
   bindLogin();
+  await api.ensureBackend();
   window.addEventListener('hashchange', () => {
     const { path } = parseRoute();
     if (path === '/cambiar-contrasena') return showResetFromLink();
@@ -220,6 +221,12 @@ function bindLogin() {
       const mail = b.dataset.fill;
       $('#password').value = mail.startsWith('admin') ? 'admin123' : mail.startsWith('tutor') ? 'tutor123' : 'padre123';
     });
+  });
+  $('#reset-demo')?.addEventListener('click', () => {
+    if (window.RayuelaMock) RayuelaMock.reset();
+    localStorage.removeItem('rayuela_token');
+    localStorage.removeItem('rayuela_student');
+    location.reload();
   });
   $('#change-form').addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -311,6 +318,7 @@ function renderChrome() {
     <button class="menu-toggle" type="button" id="menu-btn">${icon('menu')}</button>
     <a class="topbar-brand" href="#/panel"><img src="${media('assets/logo.png')}" alt="" /> La Rayuela</a>
     <span class="year-pill">${icon('calendar')} ${esc(state.year?.name || '')}</span>
+    ${api.isMock() ? '<span class="year-pill demo-pill">Demo local</span>' : ''}
     ${kidChip}
     <div class="top-actions">
       <button class="icon-btn" data-go="/correo" title="Correo">${icon('mail')}${state.unreadMail ? `<span class="badge">${state.unreadMail}</span>` : ''}</button>

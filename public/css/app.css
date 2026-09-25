@@ -73,7 +73,18 @@ svg { width: 18px; height: 18px; flex-shrink: 0; }
 
 .login-logo { width: 210px; margin: 0 auto 8px; display: block; }
 .login-card h1 { margin: 0 0 6px; font-size: 1.45rem; color: #2b4a3a; }
-.login-card p.lead { margin: 0 0 22px; color: var(--muted); }
+.login-card p.lead { margin: 0 0 12px; color: var(--muted); }
+.demo-note {
+  background: #e8f6f1;
+  color: #1f6f62;
+  border-radius: 12px;
+  padding: 10px 12px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-align: left;
+  margin-bottom: 14px;
+}
+.demo-pill { background: #e8f6f1; color: #1f6f62; border-color: #b7e0d2; }
 
 .field { text-align: left; margin-bottom: 14px; }
 .field label { display: block; font-size: 0.82rem; font-weight: 700; margin-bottom: 6px; color: #4b6278; }
